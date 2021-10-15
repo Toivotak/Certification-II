@@ -20,7 +20,8 @@ Library           OperatingSystem
 
 ${URL}=           https://robotsparebinindustries.com/#/robot-order
 ${GLOBAL_RETRY_AMOUNT}=      10x
-${GLOBAL_RETRY_INTERVAL}=    0.1s
+${GLOBAL_RETRY_INTERVAL}=    0.2s
+${GLOBAL_SLEEP_TIME}=    0.2s
 
 *** Keywords ***
 
@@ -67,18 +68,18 @@ New order
 
 Order another
     Click Button    order-another
-    Sleep    0.1s
+    Sleep    ${GLOBAL_SLEEP_TIME}
     Element Should Not Be Visible    order-another
 
 Click OK
     Click Button    OK
-    Sleep    0.1s
+    Sleep    ${GLOBAL_SLEEP_TIME}
     Element Should Not Be Visible    OK
 
 Make order
     Wait Until Element Is Visible   id:robot-preview-image 
     Click Button    order
-    Sleep    0.1s
+    Sleep    ${GLOBAL_SLEEP_TIME}
     Element Should Not Be Visible    order
 
 *** Keywords ***
@@ -90,7 +91,7 @@ Fill order
     Input Text                   css:div.form-group:nth-child(3) > input        ${order}[Legs]
     Input Text                   address                                        ${order}[Address]
     Open Preview
-    Wait Until Keyword Succeeds    3x    1s    Make order
+    Wait Until Keyword Succeeds    ${GLOBAL_RETRY_AMOUNT}    ${GLOBAL_RETRY_INTERVAL}    Make order
     Create PDF reciept
     
 Fill orders from csv
